@@ -4,7 +4,7 @@ Stand: 26.07.2026 · Branch `notes/findings` (nur im Fork `BlackScript/…`, **n
 
 Diese Datei hält fest, was wir bei der Analyse von Issue #5 (`magnetgrouplabs`) verifiziert haben — inklusive
 der Quellen, damit nichts erneut geraten werden muss. Getrennt in **belegte Fakten** und **offene Punkte**.
-Offene Punkte haben je ein Issue im Fork.
+Offene Punkte haben je ein Issue im Fork (`BlackScript/myjdownloader-extension-mv3` → Issues #1–#5).
 
 ---
 
@@ -103,12 +103,12 @@ läuft ihre Factory nie.
 | 1 | `webinterface-enhancer/settings` hatte in MV3 keinen Responder → `active` blieb false → kein Pong | **gefixt** in Upstream-PR #18 |
 | 2 | Übergabe von JDs hCaptcha-Seite fehlte komplett (MV2: `browserSolverEnhancer.js`) | **gefixt** in Upstream-PR #19 |
 | 3 | `myjdCaptchaSolver.js` hardcodete `callbackUrl: 'MYJD'` an 4 Stellen | **gefixt** in Upstream-PR #19 |
-| 4 | `Rc2Service` wird nie instanziiert → Webinterface-Captcha-Pfad hat keinen Auslöser | **offen** → Fork-Issue |
-| 5 | `myjdrc2/captcha-new` hat in MV3 keinen Sender; `webinterface-enhancer/captcha-done` keinen Empfänger | **offen** → Teil von #4 |
-| 6 | Badge „!" beim Browserstart, Warmstart-Retry via `setTimeout`, toter `myjd_connection_state`-Listener | **offen** → Fork-Issue |
-| 7 | Geräteliste ungefiltert → tote Registrierungen erscheinen als Karte mit unbrauchbarem Webinterface-Link | **offen** → Fork-Issue |
-| 8 | `X-Myjd-Appkey` sendet 4-teilige Version, JDs Parser akzeptiert nur 3 Teile | **offen** → Fork-Issue |
-| 9 | Nach `#rc2jdt`-Navigation meldet `captchaSolverContentscript.js` zusätzlich einen Solve mit `callbackUrl: null` | **offen**, kosmetisch → Teil von #4 |
+| 4 | `Rc2Service` wird nie instanziiert → Webinterface-Captcha-Pfad hat keinen Auslöser | **offen** → Fork-Issue #1 |
+| 5 | `myjdrc2/captcha-new` hat in MV3 keinen Sender; `webinterface-enhancer/captcha-done` keinen Empfänger | **offen** → Teil von Fork-Issue #1 |
+| 6 | Badge „!" beim Browserstart, Warmstart-Retry via `setTimeout`, toter `myjd_connection_state`-Listener | **offen** → Fork-Issue #2 |
+| 7 | Geräteliste ungefiltert → tote Registrierungen erscheinen als Karte mit unbrauchbarem Webinterface-Link | **offen** → Fork-Issue #3 |
+| 8 | `X-Myjd-Appkey` sendet 4-teilige Version, JDs Parser akzeptiert nur 3 Teile | **offen** → Fork-Issue #4 (Effekt unbelegt) |
+| 9 | Nach `#rc2jdt`-Navigation meldet `captchaSolverContentscript.js` zusätzlich einen Solve mit `callbackUrl: null` | **offen**, kosmetisch → Teil von Fork-Issue #1 |
 
 ### 3.1 Was in `Rc2Service.js` steckt (für den Port nach #4)
 - `:42` `webRequest`-Erkennung von JDs lokalem Solver (`http://127.0.0.1:\d+/captcha/(recaptchav(2|3)|hcaptcha)/…?id=\d+`)
@@ -122,7 +122,7 @@ läuft ihre Factory nie.
 ### 3.2 Test-Blindstellen (wichtig für künftige Fixes)
 - `scripts/services/__tests__/Rc2Service.test.js`, `background-captcha.test.js`, `captchaSolverContentscript.test.js`
   prüfen **nur Quelltext per Regex**. Deshalb ist CI grün, obwohl der Code nie ausgeführt wird. Neue Fixes
-  brauchen ausführende Tests (Muster: `contentscripts/__tests__/cnlInterceptorMain.test.js` mit `new Function(...)`).
+  brauchen ausführende Tests (Muster: `contentscripts/__tests__/cnlInterceptorMain.test.js` mit `new Function(...)`). → Fork-Issue #5
 - jsdoms `AbortSignal` hat kein statisches `timeout()`, das Chrome hat und `background.js` bei jedem `fetch` an JD
   nutzt. Ungepatcht wirft das `TypeError`, der `catch` im Handler frisst es → der komplette Rückweg wirkt lautlos
   wirkungslos. Stub liegt seit PR #19 in `jest.setup.js`. Gleiche Klasse wie XHR-im-Service-Worker aus PR #8.
